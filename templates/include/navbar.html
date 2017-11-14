@@ -1,0 +1,21 @@
+{% load staticfiles %}
+
+<div class="topbar">
+    <div class="topbar_l">
+        <ul>
+            <li><a><img src="{% static 'img/ico/blog.ico' %} " ></a></li>
+            <li><a>博客</a></li>
+        </ul>
+    </div>
+
+    <div class="topbar_r">
+        {% if request.user.is_authenticated %}
+            <a href="#">{{ request.user.username }}</a> |
+            <a href="{% url 'logout' %}">退出</a>
+        {% else %}
+            <a href="{% url 'login' %}">登录</a> |
+            <a href="{% url 'reg' %}">注册</a>
+        {% endif %}
+    </div>
+
+</div>

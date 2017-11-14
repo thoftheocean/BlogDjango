@@ -1,0 +1,11 @@
+{% load staticfiles %}
+<div class="htmleaf-container">
+    <div class="htmleaf-content bgcolor-3">
+        <div id="wrapper">
+            <audio src="{% static 'music/love.mp3' %}" preload="auto" controls></audio>
+            <script src="{% static 'js/AudioPlayer.js' %}"></script>
+            <script src="{% static 'js/jquery.min.js' %}"></script>
+            <script>$( function(){ $( 'audio' ).audioPlayer(); } );</script>
+        </div>
+    </div>
+</div>

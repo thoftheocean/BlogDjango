@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load myfilter %}
+{% block left_content %}
+    <div class="article_detail">
+        <div class="article_head">
+            <div class="postdate">
+              <div class="month">{{ article.date_publish | month_to_upper }}</div>
+              <div class="date">{{ article.date_publish | date:'d' }}</div>
+            </div>
+            <div class="title">
+                <h2><a href="" rel="bookmark" title="{{ article.title }}">{{ article.title }}</a></h2>
+                <div class="postmeta">
+                  <span class="postmeta_author">{{ article.user.username }}</span>
+                  <span class="postmeta_category"><a href="" rel="category">{{ article.category.name }}</a></span>
+                  <span class="postmeta_time">{{ article.date_publish | date:'Y-m-d' }}</span>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <div class="article_content">
+
+          {{ article.content | safe }}
+        </div>
+{#文章标签#}
+        <span class="tags">
+            {% for tag in article.tag.all %}
+            <a href="?tag={{ tag.name }}" rel="tag">{{ tag.name }}</a>
+            {% endfor %}
+        </span>
+{#评论#}
+        <div class="comments_details">
+{#查看评论#}
+            <div class="commentslist">
+                <h2 id="comments">查看评论</h2><hr>
+                {% for comment in comment_list %}
+                    <ul>
+                        <li id="comment-59418">
+                            <div class="top">
+                                <a href='#comment-59418' rel='external nofollow' class='url'>{{ comment.comment_user }}</a>
+                                <span class="time"> <a href="#comment-59418" title="">{{ comment.date_publish | time_before}}</a></span>
+                            </div>
+                            <!--头像-->
+                            <div class='comment_userface'><img alt='' src='{% static 'img/head/head01.jpg' %}' class='avatar avatar-32 photo'/></div>
+                            <!--评论内容-->
+                            <div class="comment_body">
+                                <p>{{ comment.content }}</p>
+                            </div>
+                        </li>
+                        {#子评论#}
+                        {% for children_comment in comment.children_comment %}
+                        <li id="comment-59542">
+                            <div class="reply">
+                              <div class="top"><a href="{{ children_comment.url }}" rel="external nofollow" class="url">{{ children_comment.comment_user }}</a>
+                                  <span class="time"> <a href="#comment-59543" title="">{{ children_comment.date_publish| time_before}}</a></span>
+                              </div>
+                                <!--头像-->
+                              <div class="comment_userface"><img alt="" src="{% static 'img/head/head01.jpg' %}" class="avatar avatar-32 photo" height="32" width="32"></div>
+                                <!--内容-->
+                                <div class="comment_body">{{ children_comment.content }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+{#发表评论#}
+            <div id="commentform">
+                <h3 id="comments">发表评论</h3><hr>
+                {% if not request.user.is_authenticated %}
+                <div class='login_info'>你还没有登录请<b><a href="{% url 'login' %}">[登录]</a>或<a href="{% url 'reg' %}">[注册]</a></b></div>
+                {% else %}
+                <div class='comment'>
+                    <form action="{% url 'comment_post' %}" method="post">{% csrf_token %}
+                        <ul>
+                            <li class="left">用户名:</li>
+                            <li class="right">{{ request.user.username }}</li>
+                        </ul>
+                        <ul>
+                            <li class="left">评论内容:</li>
+                            <li class="right">
+                                <p>{{ comment_form.comment }}</p>
+                            </li>
+                        </ul>
+                        <ul>
+                            <p>
+                                {{ comment_form.article }}
+                                <input name="submit" type="submit" id="submit" tabindex="5" value="提交" class="button" />
+                            </p>
+                        </ul>
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
