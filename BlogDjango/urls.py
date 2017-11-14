@@ -18,9 +18,11 @@ from django.contrib import admin
 from BlogDjango import settings
 from upload import upload_image
 from django.views import static
+import xadmin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^xadmin/', include(xadmin.site.urls)),
     url(r"^uploads/(?P<path>.*)$", static.serve, {"document_root": settings.MEDIA_ROOT,}),
     url(r'^admin/upload/(?P<dir_name>[^/]+)$', upload_image, name='upload_image'),
     url(r'^', include('blog.urls'))
